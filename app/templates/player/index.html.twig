@@ -24,8 +24,10 @@
                 <td>{{ player.ranking }}</td>
                 <td>{{ player.active ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a class="btn btn-success" href="{{ path('player_show', {'id': player.id}) }}">show</a>
-                    <a class="btn btn-warning" href="{{ path('player_edit', {'id': player.id}) }}">edit</a>
+                    <div class="input-group w-auto">
+                        <a class="btn btn-success" href="{{ path('player_show', {'id': player.id}) }}">show</a>
+                        <a class="btn btn-warning" href="{{ path('player_edit', {'id': player.id}) }}">edit</a>
+                    </div>
                 </td>
             </tr>
         {% else %}

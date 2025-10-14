@@ -5,9 +5,10 @@
     <h1>Edit Player</h1>
 
     {{ include('player/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <a class="btn btn-secondary" href="{{ path('player_index') }}">back to list</a>
-
-    {{ include('player/_delete_form.html.twig') }}
+    
+    <div class="input-group w-auto">
+        <a class="btn btn-secondary" href="{{ path('player_index') }}">back to list</a>
+        {{ include('player/_delete_form.html.twig') }}
+    </div>
 </div>
 {% endblock %}
