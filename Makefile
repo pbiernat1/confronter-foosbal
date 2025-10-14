@@ -1,3 +1,6 @@
+build:
+	- docker build -f docker/php/Dockerfile -t conf-php .
+
 up:
 	- docker compose -f docker-compose.yaml up -d
 
