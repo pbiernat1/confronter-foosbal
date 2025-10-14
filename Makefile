@@ -1,5 +1,5 @@
 build:
-	- docker build -f docker/php/Dockerfile -t conf-php .
+	- docker build -f docker/php/Dockerfile -t conf-php --no-cache .
 
 up:
 	- docker compose -f docker-compose.yaml up -d
