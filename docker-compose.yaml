@@ -47,7 +47,7 @@ services:
     ports:
       - "30080:80"
     volumes:
-      - ./app/public:/var/www/html
+      - ./app:/var/www
       - ./docker/etc/nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - confronter_network
