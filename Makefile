@@ -4,8 +4,8 @@ up:
 down:
 	- docker compose -f docker-compose.yaml down
 
-dependencies:
-	- docker compose -f docker-compose.yaml exec 
+deps:
+	- cd app && composer install
 
-watchdog:
+logs:
 	- docker compose -f docker-compose.yaml logs -f
