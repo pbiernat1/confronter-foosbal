@@ -25,6 +25,7 @@ class PlayerType extends AbstractType
                 'attr' => ['class' => 'form-control']
             ])
             ->add('active', CheckboxType::class, [
+                'required' =>false,
                 'attr' => ['class' => 'form-check-input']
             ])
         ;
