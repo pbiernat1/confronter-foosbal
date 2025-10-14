@@ -30,8 +30,8 @@
     </table>
 
 <div class="input-group w-auto">
-    <a class="btn btn-secondary" href="{{ path('player_index') }}">back to list</a>
-    <a class="btn btn-primary " href="{{ path('player_edit', {'id': player.id}) }}">edit</a>
+    <a class="btn btn-secondary" href="{{ path('player_list') }}">Back to list</a>
+    <a class="btn btn-primary " href="{{ path('player_edit', {'id': player.id}) }}">Edit</a>
     {{ include('player/_delete_form.html.twig') }}
 </div>
 
