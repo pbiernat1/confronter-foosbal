@@ -11,5 +11,11 @@ down:
 deps:
 	- cd app && composer install
 
+test-func:
+	- docker compose -f docker-compose.yaml exec php /bin/sh -c "./bin/phpunit --testsuite='Functional Tests'"
+
+test-unit:
+	- docker compose -f docker-compose.yaml exec php /bin/sh -c "./bin/phpunit --testsuite='Unit Tests'"
+
 logs:
 	- docker compose -f docker-compose.yaml logs -f
