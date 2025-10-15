@@ -7,6 +7,7 @@ up:
 down:
 	- docker compose -f docker-compose.yaml down
 
+# WARNING: need to have locally installed composer
 deps:
 	- cd app && composer install
 
