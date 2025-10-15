@@ -22,7 +22,7 @@ class PlayerFilterTest extends AppTestCase
         $filter = new PlayerFilter(new PlayerFilterActiveStrategy());
         $filteredPlayers = $filter->filter($players);
 
-        $this->assertEquals(2, count($filteredPlayers));
+        $this->assertSame(2, count($filteredPlayers));
     }
 
     public function testSuccessFilterWithInactiveStrategy()
@@ -36,6 +36,6 @@ class PlayerFilterTest extends AppTestCase
         $filter = new PlayerFilter(new PlayerFilterInactiveStrategy());
         $filteredPlayers = $filter->filter($players);
 
-        $this->assertEquals(3, count($filteredPlayers));
+        $this->assertSame(3, count($filteredPlayers));
     }
 }
