@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Service\PlayerPairCreator;
 
 use App\Entity\Player;
+use App\ValueObject\PlayerPair;
 
 class PlayerPairCreator
 {
@@ -22,9 +23,9 @@ class PlayerPairCreator
         return $this->pairs;
     }
 
-    public function get(int $key): array
+    public function get(int $key): PlayerPair
     {
-        $key -= 1; # for more human readabnle $key:1 == index:0
+        $key -= 1; # more human readable: $key:1 == index:0
         if (!isset($this->pairs[$key])) {
             throw new \OutOfBoundsException('Invalid $key number');
         }
@@ -33,7 +34,7 @@ class PlayerPairCreator
     }
 
     /**
-     * @param array[Player] $players
+     * @param array[PlayerPair] $players
      * @return array
      */
     private function createPairs(array $players): array
@@ -47,10 +48,10 @@ class PlayerPairCreator
                     $players[$j]
                 ];
                 $sumRanking = $pair[0]->getRanking() + $pair[1]->getRanking();
-                $pairs[] = [
+                $pairs[] = PlayerPair::fromArray([
                     'players' => $pair,
                     'sumRanking' => $sumRanking
-                ];
+                ]);
             }
         }
 

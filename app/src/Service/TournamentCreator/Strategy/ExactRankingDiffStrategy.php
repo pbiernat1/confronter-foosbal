@@ -28,16 +28,16 @@ class ExactRankingDiffStrategy implements StrategyInterface
                 $teamA = $pairs[$i];
                 $teamB = $pairs[$j];
 
-                $diff = max($teamA['sumRanking'], $teamB['sumRanking']) / min($teamA['sumRanking'], $teamB['sumRanking']);
+                $diff = max($teamA->getRanking(), $teamB->getRanking()) / min($teamA->getRanking(), $teamB->getRanking());
 
                 $exactDiff = ($this->exactPercentageDiff+100) / 100;
                 // dump($diff, $maxDiff);
                 if ($diff == $exactDiff) {
                     $matches[] = [
-                        'teamA' => $teamA['players'],
-                        'teamB' => $teamB['players'],
-                        'ratingSumA' => $teamA['sumRanking'],
-                        'ratingSumB' => $teamB['sumRanking']
+                        'teamA' => $teamA->getPlayers(),
+                        'teamB' => $teamB->getPlayers(),
+                        'ratingSumA' => $teamA->getRanking(),
+                        'ratingSumB' => $teamB->getRanking()
                     ];
                 }
             }

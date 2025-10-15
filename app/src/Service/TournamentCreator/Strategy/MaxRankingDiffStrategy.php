@@ -28,15 +28,15 @@ class MaxRankingDiffStrategy implements StrategyInterface
                 $teamA = $pairs[$i];
                 $teamB = $pairs[$j];
 
-                $diff = max($teamA['sumRanking'], $teamB['sumRanking']) / min($teamA['sumRanking'], $teamB['sumRanking']);
+                $diff = max($teamA->getRanking(), $teamB->getRanking()) / min($teamA->getRanking(), $teamB->getRanking());
 
                 $maxDiff = ($this->maxPercentageDiff+100) / 100;
                 if ($diff <= $maxDiff) {
                     $matches[] = [
-                        'teamA' => $teamA['players'],
-                        'teamB' => $teamB['players'],
-                        'ratingSumA' => $teamA['sumRanking'],
-                        'ratingSumB' => $teamB['sumRanking']
+                        'teamA' => $teamA->getPlayers(),
+                        'teamB' => $teamB->getPlayers(),
+                        'ratingSumA' => $teamA->getRanking(),
+                        'ratingSumB' => $teamB->getRanking()
                     ];
                 }
             }

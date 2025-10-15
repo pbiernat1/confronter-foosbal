@@ -22,7 +22,7 @@ class PlayerPairCreatorTest extends AppTestCase
         $pairs = $playerPlayerPairCreator->getAll();
 
         $this->assertSame(1, count($pairs));
-        $this->assertSame(210, $pairs[0]['sumRanking']);
+        $this->assertSame(210, $pairs[0]->getRanking());
     }
 
     
@@ -38,9 +38,9 @@ class PlayerPairCreatorTest extends AppTestCase
         $pairs = $playerPairCreator->getAll();
         
         $this->assertSame(3, count($pairs));
-        $this->assertSame(210, $pairs[0]['sumRanking']);
-        $this->assertSame(300, $pairs[1]['sumRanking']);
-        $this->assertSame(310, $pairs[2]['sumRanking']);
+        $this->assertSame(210, $pairs[0]->getRanking());
+        $this->assertSame(300, $pairs[1]->getRanking());
+        $this->assertSame(310, $pairs[2]->getRanking());
     }
 
     public function testGetNotExistingPlayerPair(): void
