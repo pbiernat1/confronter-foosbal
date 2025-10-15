@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="alert alert-danger" role="alert">{{ message }}</div>
+
+    <div><a class="btn btn-primary" href="{{ path('player_list') }}">Back to list</a></div>
+</div>
+{% endblock %}

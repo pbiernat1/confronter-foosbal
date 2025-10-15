@@ -7,7 +7,7 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Lp</th>
                 <th>First name</th>
                 <th>Last name</th>
                 <th>Ranking</th>
@@ -18,7 +18,7 @@
         <tbody>
         {% for player in players %}
             <tr>
-                <td>{{ player.id }}</td>
+                <td>{{ loop.index }}</td>
                 <td>{{ player.firstName }}</td>
                 <td>{{ player.lastName }}</td>
                 <td>{{ player.ranking }}</td>

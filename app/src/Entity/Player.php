@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PlayerRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PlayerRepository::class)]
 class Player
@@ -20,6 +21,7 @@ class Player
     private ?string $last_name = null;
 
     #[ORM\Column]
+    #[Assert\Range(min: 1, max: 1000, notInRangeMessage: "The value must be between {{ min }} and {{ max }}.")]
     private ?int $ranking = null;
 
     #[ORM\Column]
