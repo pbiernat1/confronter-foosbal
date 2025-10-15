@@ -6,7 +6,6 @@ namespace App\Controller;
 use App\Entity\Player;
 use App\Form\PlayerType;
 use App\Infra\Interface\PlayerRepositoryInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,17 +34,15 @@ final class PlayerController extends AbstractController
         ]);
     }
 
-    // FIXME: EntityManagerInterface is tightly coupled
     #[Route('/new', name: 'player_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $em): Response
+    public function new(Request $request, PlayerRepositoryInterface $repo): Response
     {
         $player = new Player();
         $form = $this->createForm(PlayerType::class, $player);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->persist($player);
-            $em->flush();
+            $repo->save($player);
 
             return $this->redirectToRoute('player_list', [], Response::HTTP_SEE_OTHER);
         }
@@ -69,14 +66,8 @@ final class PlayerController extends AbstractController
         ]);
     }
 
-    // FIXME: EntityManagerInterface is tightly coupled
     #[Route('/{id}/edit', name: 'player_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
-    public function edit(
-        Request $request,
-        EntityManagerInterface $em,
-        PlayerRepositoryInterface $repo,
-        int $id
-    ): Response
+    public function edit(Request $request, PlayerRepositoryInterface $repo, int $id): Response
     {
         $player = $repo->findPlayer($id);
         if ($player == null) {
@@ -87,7 +78,7 @@ final class PlayerController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
+            $repo->save($player);
 
             return $this->redirectToRoute('player_list', [], Response::HTTP_SEE_OTHER);
         }
@@ -98,24 +89,16 @@ final class PlayerController extends AbstractController
         ]);
     }
 
-    // FIXME: EntityManagerInterface is tightly coplued
     #[Route('/{id}', name: 'player_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
-    public function delete(
-        Request $request,
-        EntityManagerInterface $em,
-        PlayerRepositoryInterface $repo,
-        int $id
-    ): Response
+    public function delete(Request $request, PlayerRepositoryInterface $repo, int $id): Response
     {
-        // $repo = $em->getRepository(Player::class);
         $player = $repo->findPlayer($id);
         if ($player == null) {
             return $this->render('messages/error.html.twig', ['message' => 'Player not found']);
         }
 
         if ($this->isCsrfTokenValid('delete'.$player->getId(), $request->getPayload()->getString('_token'))) {
-            $em->remove($player);
-            $em->flush();
+            $repo->delete($player);
         }
 
         return $this->redirectToRoute('player_list', [], Response::HTTP_SEE_OTHER);

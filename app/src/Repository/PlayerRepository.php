@@ -58,4 +58,22 @@ class PlayerRepository extends ServiceEntityRepository implements PlayerReposito
     {
         return $this->find($id);
     }
+
+    public function save(Player $player, bool $flush = true): void
+    {
+        $this->getEntityManager()->persist($player);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    public function delete(Player $player, bool $flush = true): void
+    {
+        $this->getEntityManager()->remove($player);
+
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
 }
