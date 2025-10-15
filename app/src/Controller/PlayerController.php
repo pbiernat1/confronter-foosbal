@@ -112,7 +112,7 @@ final class PlayerController extends AbstractController
         if ($player == null) {
             return $this->render('messages/error.html.twig', ['message' => 'Player not found']);
         }
-        
+
         if ($this->isCsrfTokenValid('delete'.$player->getId(), $request->getPayload()->getString('_token'))) {
             $em->remove($player);
             $em->flush();
