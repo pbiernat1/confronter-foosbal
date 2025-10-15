@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Service\TournamentCreator;
 
 use App\Service\TournamentCreator\Strategy\StrategyInterface;
+use App\ValueObject\TournamentPair;
 
 class TournamentCreator
 {
@@ -22,12 +23,15 @@ class TournamentCreator
         }
     }
 
+    /**
+     * @return array[TournamentPair]
+     */
     public function getAllMatches(): array
     {
         return $this->matches;
     }
 
-    public function getRandomMatch(): ?array
+    public function getRandomMatch(): TournamentPair
     {
         $index = array_rand($this->matches);
 

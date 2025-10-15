@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Service\TournamentCreator\Strategy;
 
+use App\ValueObject\TournamentPair;
+
 class MaxRankingDiffStrategy implements StrategyInterface
 {
     /**
@@ -32,12 +34,12 @@ class MaxRankingDiffStrategy implements StrategyInterface
 
                 $maxDiff = ($this->maxPercentageDiff+100) / 100;
                 if ($diff <= $maxDiff) {
-                    $matches[] = [
+                    $matches[] = TournamentPair::fromArray([
                         'teamA' => $teamA->getPlayers(),
                         'teamB' => $teamB->getPlayers(),
-                        'ratingSumA' => $teamA->getRanking(),
-                        'ratingSumB' => $teamB->getRanking()
-                    ];
+                        'rankingSumA' => $teamA->getRanking(),
+                        'rankingSumB' => $teamB->getRanking()
+                    ]);
                 }
             }
         }

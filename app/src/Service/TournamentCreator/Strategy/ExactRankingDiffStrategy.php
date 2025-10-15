@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Service\TournamentCreator\Strategy;
 
+use App\ValueObject\TournamentPair;
+
 class ExactRankingDiffStrategy implements StrategyInterface
 {
     /**
@@ -31,14 +33,13 @@ class ExactRankingDiffStrategy implements StrategyInterface
                 $diff = max($teamA->getRanking(), $teamB->getRanking()) / min($teamA->getRanking(), $teamB->getRanking());
 
                 $exactDiff = ($this->exactPercentageDiff+100) / 100;
-                // dump($diff, $maxDiff);
                 if ($diff == $exactDiff) {
-                    $matches[] = [
+                    $matches[] = TournamentPair::fromArray([
                         'teamA' => $teamA->getPlayers(),
                         'teamB' => $teamB->getPlayers(),
-                        'ratingSumA' => $teamA->getRanking(),
-                        'ratingSumB' => $teamB->getRanking()
-                    ];
+                        'rankingSumA' => $teamA->getRanking(),
+                        'rankingSumB' => $teamB->getRanking()
+                    ]);
                 }
             }
         }
