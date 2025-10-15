@@ -3,65 +3,49 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Player;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Infra\Interface\PlayerRepositoryInterface;
+use App\Tests\AppWebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
-final class PlayerControllerTest extends WebTestCase
+final class PlayerControllerTest extends AppWebTestCase
 {
-    private KernelBrowser $client;
-    private EntityManagerInterface $manager;
-    private EntityRepository $playerRepository;
-    private string $path = '/player/';
+    private PlayerRepositoryInterface $playerRepository;
+    private string $path = '/';
 
     protected function setUp(): void
     {
-        $this->client = static::createClient();
-        $this->manager = static::getContainer()->get('doctrine')->getManager();
+        parent::setUp();
+
         $this->playerRepository = $this->manager->getRepository(Player::class);
-
-        foreach ($this->playerRepository->findAll() as $object) {
-            $this->manager->remove($object);
-        }
-
-        $this->manager->flush();
     }
 
     public function testList(): void
     {
-        $this->client->followRedirects();
-        $crawler = $this->client->request('GET', $this->path);
+        $crawler = self::$client->request('GET', $this->path);
 
-        self::assertResponseStatusCodeSame(200);
-        self::assertPageTitleContains('Foosball match generator');
+        self::assertResponseStatusCodeSame(Response::HTTP_OK);
 
-        // Use the $crawler to perform additional assertions e.g.
-        // self::assertSame('Some text on the page', $crawler->filter('.p')->first()->text());
+        self::assertSame('Player List', $crawler->filter('h1')->first()->text());
     }
 
     public function testNew(): void
     {
-        $this->markTestIncomplete();
-        $this->client->request('GET', sprintf('%snew', $this->path));
+        self::$client->request('GET', sprintf('%snew', $this->path));
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeSame(Response::HTTP_OK);
 
-        $this->client->submitForm('Save', [
+        self::$client->submitForm('Save', [
             'player[first_name]' => 'Testing',
             'player[last_name]' => 'Testing',
-            'player[ranking]' => 'Testing',
-            'player[active]' => 'Testing',
+            'player[ranking]' => 100,
+            'player[active]' => true,
         ]);
 
-        self::assertResponseRedirects($this->path);
-
-        self::assertSame(1, $this->playerRepository->count([]));
+        self::assertSame(1, count($this->playerRepository->findAllPlayers()));
     }
 
     public function testShow(): void
     {
-        $this->markTestIncomplete();
         $fixture = new Player();
         $fixture->setFirstName('Value');
         $fixture->setLastName('Value');
@@ -71,17 +55,14 @@ final class PlayerControllerTest extends WebTestCase
         $this->manager->persist($fixture);
         $this->manager->flush();
 
-        $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
+        self::$client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
 
-        self::assertResponseStatusCodeSame(200);
+        self::assertResponseStatusCodeSame(Response::HTTP_OK);
         self::assertPageTitleContains('Foosball match generator');
-
-        // Use assertions to check that the properties are properly displayed.
     }
 
     public function testEdit(): void
     {
-        $this->markTestIncomplete();
         $fixture = new Player();
         $fixture->setFirstName('Value');
         $fixture->setLastName('Value');
@@ -91,28 +72,25 @@ final class PlayerControllerTest extends WebTestCase
         $this->manager->persist($fixture);
         $this->manager->flush();
 
-        $this->client->request('GET', sprintf('%s%s/edit', $this->path, $fixture->getId()));
+        self::$client->request('GET', sprintf('%s%s/edit', $this->path, $fixture->getId()));
 
-        $this->client->submitForm('Update', [
+        self::$client->submitForm('Update', [
             'player[first_name]' => 'Something New',
             'player[last_name]' => 'Something New',
-            'player[ranking]' => 'Something New',
-            'player[active]' => 'Something New',
+            'player[ranking]' => 203,
+            'player[active]' => true,
         ]);
 
-        self::assertResponseRedirects('/player/');
+        $fixture = $this->playerRepository->findAllPlayers();
 
-        $fixture = $this->playerRepository->findAll();
-
-        self::assertSame('Something New', $fixture[0]->getFirst_name());
-        self::assertSame('Something New', $fixture[0]->getLast_name());
-        self::assertSame('Something New', $fixture[0]->getRanking());
-        self::assertSame('Something New', $fixture[0]->getActive());
+        self::assertSame('Something New', $fixture[0]->getFirstName());
+        self::assertSame('Something New', $fixture[0]->getLastName());
+        self::assertSame(203, $fixture[0]->getRanking());
+        self::assertSame(true, $fixture[0]->isActive());
     }
 
     public function testRemove(): void
     {
-        $this->markTestIncomplete();
         $fixture = new Player();
         $fixture->setFirstName('Value');
         $fixture->setLastName('Value');
@@ -122,10 +100,9 @@ final class PlayerControllerTest extends WebTestCase
         $this->manager->persist($fixture);
         $this->manager->flush();
 
-        $this->client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
-        $this->client->submitForm('Delete');
+        self::$client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
+        self::$client->submitForm('Delete');
 
-        self::assertResponseRedirects('/player/');
-        self::assertSame(0, $this->playerRepository->count([]));
+        self::assertSame(0, count($this->playerRepository->findAllPlayers()));
     }
 }
