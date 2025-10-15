@@ -23,17 +23,11 @@ final class PlayerController extends AbstractController
     public function list(Request $request, PlayerRepositoryInterface $repo): Response
     {
         $filter = $request->query->get('filter');
-        switch ($filter) {
-            case self::FILTER_ALL:
-                $players = $repo->findAllPlayers();
-            break;
-            case self::FILTER_ACTIVE:
-                $players = $repo->findActivePlayers();
-            break;
-            case self::FILTER_INACTIVE:
-                $players = $repo->findInactivePlayers();
-            break;
-        }
+        $players = match ($filter) {
+            'all' => $repo->findAllPlayers(),
+            'active' => $repo->findActivePlayers(),
+            'inactive' => $repo->findInactivePlayers(),
+        };
 
         return $this->render('player/list.html.twig', [
             'players' => $players,
