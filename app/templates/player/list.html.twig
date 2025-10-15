@@ -4,6 +4,14 @@
 <div class="container">
     <h1>Player List</h1>
 
+    <form method="get" action="{{ path('player_list') }}" onchange="this.submit();">
+        <select class="form-select" aria-label="All" name="filter">
+            <option value="all" {% if filter == 'all' %}selected{% endif %}>All</option>
+            <option value="active" {% if filter == 'active' %}selected{% endif %}>Active only</option>
+            <option value="inactive" {% if filter == 'inactive' %}selected{% endif %}>Inactive only</option>
+        </select>
+    </form>
+
     <table class="table">
         <thead>
             <tr>

@@ -1,10 +1,11 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Controller;
 
 use App\Entity\Player;
 use App\Form\PlayerType;
-use App\Repository\PlayerRepository;
+use App\Infra\Interface\PlayerRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,15 +15,33 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/')]
 final class PlayerController extends AbstractController
 {
+    const FILTER_ALL = 'all';
+    const FILTER_ACTIVE = 'active';
+    const FILTER_INACTIVE = 'inactive';
+
     #[Route(name: 'player_list', methods: ['GET'])]
-    public function list(PlayerRepository $repo): Response
+    public function list(Request $request, PlayerRepositoryInterface $repo): Response
     {
+        $filter = $request->query->get('filter');
+        switch ($filter) {
+            case self::FILTER_ALL:
+                $players = $repo->findAllPlayers();
+            break;
+            case self::FILTER_ACTIVE:
+                $players = $repo->findActivePlayers();
+            break;
+            case self::FILTER_INACTIVE:
+                $players = $repo->findInactivePlayers();
+            break;
+        }
+
         return $this->render('player/list.html.twig', [
-            'players' => $repo->findAll(),
+            'players' => $players,
+            'filter' => $filter,
         ]);
     }
 
-    // FIXME: EntityManagerInterface is tightly coplued
+    // FIXME: EntityManagerInterface is tightly coupled
     #[Route('/new', name: 'player_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
@@ -44,9 +63,9 @@ final class PlayerController extends AbstractController
     }
 
     #[Route('/{id}', name: 'player_show', methods: ['GET'])]
-    public function show(PlayerRepository $repo, int $id): Response
+    public function show(PlayerRepositoryInterface $repo, int $id): Response
     {
-        $player = $repo->find($id);
+        $player = $repo->findPlayer($id);
         if ($player == null) {
             return $this->render('messages/error.html.twig', ['message' => 'Player not found']);
         }
@@ -56,12 +75,16 @@ final class PlayerController extends AbstractController
         ]);
     }
 
-    // FIXME: EntityManagerInterface is tightly coplued
+    // FIXME: EntityManagerInterface is tightly coupled
     #[Route('/{id}/edit', name: 'player_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityManagerInterface $em, int $id): Response
+    public function edit(
+        Request $request,
+        EntityManagerInterface $em,
+        PlayerRepositoryInterface $repo,
+        int $id
+    ): Response
     {
-        $repo = $em->getRepository(Player::class);
-        $player = $repo->find($id);
+        $player = $repo->findPlayer($id);
         if ($player == null) {
             return $this->render('messages/error.html.twig', ['message' => 'Player not found']);
         }
@@ -83,10 +106,15 @@ final class PlayerController extends AbstractController
 
     // FIXME: EntityManagerInterface is tightly coplued
     #[Route('/{id}', name: 'player_delete', methods: ['POST'])]
-    public function delete(Request $request, EntityManagerInterface $em, int $id): Response
+    public function delete(
+        Request $request,
+        EntityManagerInterface $em,
+        PlayerRepositoryInterface $repo,
+        int $id
+    ): Response
     {
-        $repo = $em->getRepository(Player::class);
-        $player = $repo->find($id);
+        // $repo = $em->getRepository(Player::class);
+        $player = $repo->findPlayer($id);
         if ($player == null) {
             return $this->render('messages/error.html.twig', ['message' => 'Player not found']);
         }
