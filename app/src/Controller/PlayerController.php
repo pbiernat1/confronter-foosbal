@@ -22,7 +22,7 @@ final class PlayerController extends AbstractController
     #[Route(name: 'player_list', methods: ['GET'])]
     public function list(Request $request, PlayerRepositoryInterface $repo): Response
     {
-        $filter = $request->query->get('filter');
+        $filter = $request->query->get('filter') ?? 'all';
         $players = match ($filter) {
             'all'       => $repo->findAllPlayers(),
             'active'    => $repo->findActivePlayers(),
@@ -56,7 +56,7 @@ final class PlayerController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'player_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'player_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     public function show(PlayerRepositoryInterface $repo, int $id): Response
     {
         $player = $repo->findPlayer($id);
@@ -70,7 +70,7 @@ final class PlayerController extends AbstractController
     }
 
     // FIXME: EntityManagerInterface is tightly coupled
-    #[Route('/{id}/edit', name: 'player_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'player_edit', methods: ['GET', 'POST'], requirements: ['id' => '\d+'])]
     public function edit(
         Request $request,
         EntityManagerInterface $em,
@@ -99,7 +99,7 @@ final class PlayerController extends AbstractController
     }
 
     // FIXME: EntityManagerInterface is tightly coplued
-    #[Route('/{id}', name: 'player_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'player_delete', methods: ['POST'], requirements: ['id' => '\d+'])]
     public function delete(
         Request $request,
         EntityManagerInterface $em,
