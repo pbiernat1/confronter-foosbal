@@ -10,10 +10,7 @@ class PlayerPairCreator
 {
     private array $pairs = [];
 
-    /**
-     * @param array[Player] $players
-     */
-    public function __construct(array $players)
+    public function generate(array $players): void
     {
         $this->pairs = $this->createPairs($players);
     }
@@ -34,19 +31,26 @@ class PlayerPairCreator
     }
 
     /**
-     * @param array[PlayerPair] $players
+     * @param array[Player] $players
      * @return array
      */
     private function createPairs(array $players): array
     {
         $pairs = [];
+        $addedPlayers = [];
         $count = count($players);
+
+        if ($count < 4) {
+            throw new \DomainException('Insufficient number of players');
+        }
+
         for ($i = 0; $i < $count - 1; $i++) {
             for ($j = $i + 1; $j < $count; $j++) {
                 $pair = [
                     $players[$i],
                     $players[$j]
                 ];
+
                 $sumRanking = $pair[0]->getRanking() + $pair[1]->getRanking();
                 $pairs[] = PlayerPair::fromArray([
                     'players' => $pair,

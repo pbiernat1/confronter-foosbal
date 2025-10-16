@@ -6,55 +6,58 @@ namespace App\Tests\Unit\Service\PairCreator;
 use App\Service\PlayerPairCreator\PlayerPairCreator;
 use App\Tests\AppTestCase;
 use App\Entity\Player;
-use OutOfBoundsException;
 
 class PlayerPairCreatorTest extends AppTestCase
 {
-
-    public function testCreatedOnePairPlayerPairGenerator(): void
+    public function testInsufficientNumberOfPlayers(): void
     {
         $players = [
             (new Player())->setRanking(100),
             (new Player())->setRanking(110),
         ];
 
-        $playerPlayerPairCreator = new PlayerPairCreator($players);
-        $pairs = $playerPlayerPairCreator->getAll();
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Insufficient number of players');
 
-        $this->assertSame(1, count($pairs));
-        $this->assertSame(210, $pairs[0]->getRanking());
+        $playerPairCreator = new PlayerPairCreator();
+        $playerPairCreator->generate($players);
+
     }
-
     
-    public function testCreatedThreePairsPlayerPairGenerator(): void
+    public function testCreatedFourPairsPlayerPairGenerator(): void
     {
         $players = [
             (new Player())->setRanking(100),
             (new Player())->setRanking(110),
             (new Player())->setRanking(200),
+            (new Player())->setRanking(220),
         ];
         
-        $playerPairCreator = new PlayerPairCreator($players);
-        $pairs = $playerPairCreator->getAll();
+        $playerPairCreator = new PlayerPairCreator();
+        $playerPairCreator->generate($players);
         
-        $this->assertSame(3, count($pairs));
-        $this->assertSame(210, $pairs[0]->getRanking());
-        $this->assertSame(300, $pairs[1]->getRanking());
-        $this->assertSame(310, $pairs[2]->getRanking());
+        $this->assertSame(6, count($playerPairCreator->getAll()));
+        $this->assertSame(210, $playerPairCreator->get(1)->getRanking());
+        $this->assertSame(300, $playerPairCreator->get(2)->getRanking());
+        $this->assertSame(320, $playerPairCreator->get(3)->getRanking());
+        $this->assertSame(310, $playerPairCreator->get(4)->getRanking());
     }
 
     public function testGetNotExistingPlayerPair(): void
     {
         $players = [
             (new Player())->setRanking(100),
-            (new Player())->setRanking(110),
+            (new Player())->setRanking(200),
+            (new Player())->setRanking(300),
+            (new Player())->setRanking(400),
         ];
 
-        $playerPairCreator = new PlayerPairCreator($players);
+        $playerPairCreator = new PlayerPairCreator();
+        $playerPairCreator->generate($players);
 
-        $this->expectException(OutOfBoundsException::class);
+        $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('Invalid $key number');
 
-        $playerPairCreator->get(2);
+        $playerPairCreator->get(key: 10);
     }
 }
