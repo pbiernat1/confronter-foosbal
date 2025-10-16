@@ -23,9 +23,9 @@ final class PlayerController extends AbstractController
     {
         $filter = $request->query->get('filter') ?? 'all';
         $players = match ($filter) {
-            'all'       => $repo->findAllPlayers(),
-            'active'    => $repo->findActivePlayers(),
-            'inactive'  => $repo->findInactivePlayers(),
+            self::FILTER_ALL       => $repo->findAllPlayers(),
+            self::FILTER_ACTIVE    => $repo->findActivePlayers(),
+            self::FILTER_INACTIVE  => $repo->findInactivePlayers(),
         };
 
         return $this->render('player/list.html.twig', [
