@@ -1,36 +1,30 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\DTO;
 
-use App\Repository\PlayerRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
-
-#[ORM\Entity(repositoryClass: PlayerRepository::class)]
 class Player
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(name: 'first_name', length: 255)]
     private ?string $firstName = null;
 
-    #[ORM\Column(name: 'last_name', length: 255)]
     private ?string $lastName = null;
 
-    #[ORM\Column]
-    #[Assert\Range(min: 1, max: 1000, notInRangeMessage: "The value must be between {{ min }} and {{ max }}.")]
     private ?int $ranking = null;
 
-    #[ORM\Column]
     private ?bool $active = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getFirstName(): ?string
