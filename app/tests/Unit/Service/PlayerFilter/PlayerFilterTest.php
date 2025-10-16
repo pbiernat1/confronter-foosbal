@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service\PlayerFilter;
 
+use App\DataFixtures\PlayerFilterTest\TestSuccessFilterWithActiveStrategyFixtures;
+use App\DataFixtures\PlayerFilterTest\TestSuccessFilterWithInactiveStrategyFixtures;
 use App\Service\PlayerFilter\PlayerFilter;
 use App\Service\PlayerFilter\Strategy\PlayerFilterActiveStrategy;
 use App\Service\PlayerFilter\Strategy\PlayerFilterInactiveStrategy;
@@ -13,12 +15,9 @@ class PlayerFilterTest extends AppTestCase
 {
     public function testSuccessFilterWithActiveStrategy()
     {
-        $players = [
-            (new Player())->setActive(false),
-            (new Player())->setActive(false),
-            (new Player())->setActive(true),
-            (new Player())->setActive(true),
-        ];
+        $this->loadFixture(new TestSuccessFilterWithActiveStrategyFixtures());
+        $players = $this->em->getRepository(Player::class)->findAllPlayers();
+
         $filter = new PlayerFilter(new PlayerFilterActiveStrategy());
         $filteredPlayers = $filter->filter($players);
 
@@ -27,12 +26,9 @@ class PlayerFilterTest extends AppTestCase
 
     public function testSuccessFilterWithInactiveStrategy()
     {
-        $players = [
-            (new Player())->setActive(false),
-            (new Player())->setActive(false),
-            (new Player())->setActive(false),
-            (new Player())->setActive(true),
-        ];
+        $this->loadFixture(new TestSuccessFilterWithInactiveStrategyFixtures());
+        $players = $this->em->getRepository(Player::class)->findAllPlayers();
+
         $filter = new PlayerFilter(new PlayerFilterInactiveStrategy());
         $filteredPlayers = $filter->filter($players);
 

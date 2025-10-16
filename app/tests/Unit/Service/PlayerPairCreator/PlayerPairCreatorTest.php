@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service\PairCreator;
 
+use App\DataFixtures\PlayerPairCreatorTest\TestCreatedFourPairsPlayerPairGeneratorFixtures;
+use App\DataFixtures\PlayerPairCreatorTest\TestGetNotExistingPlayerPairFixtures;
 use App\Service\PlayerPairCreator\PlayerPairCreator;
 use App\Tests\AppTestCase;
 use App\Entity\Player;
@@ -11,10 +13,7 @@ class PlayerPairCreatorTest extends AppTestCase
 {
     public function testInsufficientNumberOfPlayers(): void
     {
-        $players = [
-            (new Player())->setRanking(100),
-            (new Player())->setRanking(110),
-        ];
+        $players = [];
 
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Insufficient number of players');
@@ -26,13 +25,9 @@ class PlayerPairCreatorTest extends AppTestCase
     
     public function testCreatedFourPairsPlayerPairGenerator(): void
     {
-        $players = [
-            (new Player())->setRanking(100),
-            (new Player())->setRanking(110),
-            (new Player())->setRanking(200),
-            (new Player())->setRanking(220),
-        ];
-        
+        $this->loadFixture(new TestCreatedFourPairsPlayerPairGeneratorFixtures());
+        $players = $this->em->getRepository(Player::class)->findAllPlayers();
+
         $playerPairCreator = new PlayerPairCreator();
         $playerPairCreator->generate($players);
         
@@ -45,12 +40,8 @@ class PlayerPairCreatorTest extends AppTestCase
 
     public function testGetNotExistingPlayerPair(): void
     {
-        $players = [
-            (new Player())->setRanking(100),
-            (new Player())->setRanking(200),
-            (new Player())->setRanking(300),
-            (new Player())->setRanking(400),
-        ];
+        $this->loadFixture(new TestGetNotExistingPlayerPairFixtures());
+        $players = $this->em->getRepository(Player::class)->findAllPlayers();
 
         $playerPairCreator = new PlayerPairCreator();
         $playerPairCreator->generate($players);

@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Service\TournamentCreator;
 
-use App\Entity\Player;
+use App\DTO\Player;
 use App\Service\TournamentCreator\Strategy\MaxRankingDiffStrategy;
 use App\Service\TournamentCreator\Strategy\ExactRankingDiffStrategy;
 use App\Service\TournamentCreator\TournamentCreator;
@@ -16,15 +16,15 @@ class TournamentCreatorTest extends AppTestCase
         $pairs = [
             PlayerPair::fromArray([
                 'players' => [
-                    (new Player())->setRanking(100),
-                    (new Player())->setRanking(110),
+                    (new Player())->setId(1)->setRanking(100),
+                    (new Player())->setId(2)->setRanking(300),
                 ],
                 'sumRanking' => 210
             ]),
             PlayerPair::fromArray([
                 'players' => [
-                    (new Player())->setRanking(100),
-                    (new Player())->setRanking(200),
+                    (new Player())->setId(3)->setRanking(100),
+                    (new Player())->setId(4)->setRanking(350),
                 ],
                 'sumRanking' => 300
             ])
