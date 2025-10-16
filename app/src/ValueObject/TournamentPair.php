@@ -39,4 +39,9 @@ class TournamentPair
     {
         return $this->rankingB;
     }
+
+    public function getDifference(): int
+    {
+        return $this->getRankingA() - $this->getRankingB();
+    }
 }
