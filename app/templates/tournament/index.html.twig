@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <h1>Tournament Players</h1>
+
+    <h4>Team A</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Lp</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Ranking</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for player in tournamentPairs.teamA %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ player.firstName }}</td>
+                <td>{{ player.lastName }}</td>
+                <td>{{ player.ranking }}</td>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+    <h4>Team B</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Lp</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Ranking</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for player in tournamentPairs.teamB %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>{{ player.firstName }}</td>
+                <td>{{ player.lastName }}</td>
+                <td>{{ player.ranking }}</td>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-secondary" href="{{ path('player_list') }}">Back to list</a>
+    <a class="btn btn-success float-end" href="{{ path('tournament_generate') }}">Re-create pairs</a>
+</div>
+{% endblock %}
