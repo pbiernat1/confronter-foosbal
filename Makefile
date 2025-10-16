@@ -9,7 +9,7 @@ down:
 
 # WARNING: need to have locally installed composer
 deps:
-	- cd app && composer install
+	- cd app && composer install --ignore-platform-reqs
 
 test-func:
 	- docker compose -f docker-compose.yaml exec php /bin/sh -c "./bin/phpunit --testsuite='Functional Tests'"
