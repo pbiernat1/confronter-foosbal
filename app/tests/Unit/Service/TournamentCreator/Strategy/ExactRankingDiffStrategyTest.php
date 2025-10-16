@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Tests\Unit\Service\TournamentCreator;
+namespace App\Tests\Unit\Service\TournamentCreator\Strategy;
 
 use App\DTO\Player;
-use App\Service\TournamentCreator\Strategy\MaxRankingDiffStrategy;
 use App\Service\TournamentCreator\Strategy\ExactRankingDiffStrategy;
 use App\Service\TournamentCreator\TournamentCreator;
 use App\ValueObject\PlayerPair;
 use App\Tests\AppTestCase;
 
-class TournamentCreatorTest extends AppTestCase
+class ExactRankingDiffStrategyTest extends AppTestCase
 {
     public function testFailExactRankingDiffStrategy(): void
     {
@@ -30,14 +29,14 @@ class TournamentCreatorTest extends AppTestCase
             ])
         ];
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Unable to generate data!');
 
         $t = new TournamentCreator(new ExactRankingDiffStrategy(20));
         $t->createTournamentMatches($pairs);
     }
 
-    public function testDuplicatedPlayersInTeamsExactRankingDiffStrategy(): void
+    public function testDuplicatedPlayerExactRankingDiffStrategy(): void
     {
         $pairs = [
             PlayerPair::fromArray([
@@ -50,65 +49,39 @@ class TournamentCreatorTest extends AppTestCase
             PlayerPair::fromArray([
                 'players' => [
                     (new Player())->setId(1)->setRanking(100),
-                    (new Player())->setId(4)->setRanking(350),
+                    (new Player())->setId(3)->setRanking(350),
                 ],
                 'sumRanking' => 350
             ])
         ];
 
-        $this->expectException(\Exception::class);
+        $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Unable to generate data!');
 
         $t = new TournamentCreator(new ExactRankingDiffStrategy(20));
         $t->createTournamentMatches($pairs);
     }
 
-    public function testFailMaxRankingDiffStrategy(): void
+    public function testSuccessExactRankingDiffStrategy(): void
     {
         $pairs = [
             PlayerPair::fromArray([
                 'players' => [
-                    (new Player())->setRanking(100),
-                    (new Player())->setRanking(110),
+                    (new Player())->setId(1)->setRanking(80),
+                    (new Player())->setId(2)->setRanking(120),
                 ],
-                'sumRanking' => 210
+                'sumRanking' => 200
             ]),
             PlayerPair::fromArray([
                 'players' => [
-                    (new Player())->setRanking(100),
-                    (new Player())->setRanking(400),
+                    (new Player())->setId(3)->setRanking(110),
+                    (new Player())->setId(4)->setRanking(130),
                 ],
-                'sumRanking' => 500
+                'sumRanking' => 240
             ])
         ];
 
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Unable to generate data!');
-
-        $t = new TournamentCreator(new MaxRankingDiffStrategy(20));
-        $t->createTournamentMatches($pairs);
-    }
-
-    public function testSuccessCountGeneratedTournamentTeams(): void
-    {
-        $pairs = [
-            PlayerPair::fromArray([
-                'players' => [
-                    (new Player())->setId(1)->setRanking(100),
-                    (new Player())->setId(2)->setRanking(200),
-                ],
-                'sumRanking' => 300
-            ]),
-            PlayerPair::fromArray([
-                'players' => [
-                    (new Player())->setId(3)->setRanking(100),
-                    (new Player())->setId(4)->setRanking(210),
-                ],
-                'sumRanking' => 310
-            ])
-        ];
-
-        $t = new TournamentCreator(new MaxRankingDiffStrategy(20));
+        $t = new TournamentCreator(new ExactRankingDiffStrategy(20));
         $t->createTournamentMatches($pairs);
 
         $this->assertSame(1, count($t->getAllMatches()));
