@@ -30,6 +30,13 @@ class MaxRankingDiffStrategy implements StrategyInterface
                 $teamA = $pairs[$i];
                 $teamB = $pairs[$j];
 
+                $idsA = array_map(fn($p) => $p->getId(), $teamA->getPlayers());
+                $idsB = array_map(fn($p) => $p->getId(), $teamB->getPlayers());
+
+                if (count(array_intersect($idsA, $idsB)) != 0) {
+                    continue;
+                }
+
                 $diff = max($teamA->getRanking(), $teamB->getRanking()) / min($teamA->getRanking(), $teamB->getRanking());
 
                 $maxDiff = ($this->maxPercentageDiff+100) / 100;

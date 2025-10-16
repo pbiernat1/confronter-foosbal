@@ -19,7 +19,7 @@ class TournamentCreator
         $this->matches = $this->strategy->createTournamentPairs($pairs);
 
         if (count($this->matches) == 0) {
-            throw new \Exception('Unable to generate data!');
+            throw new \RuntimeException('Unable to generate data!');
         }
     }
 

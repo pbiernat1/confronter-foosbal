@@ -37,7 +37,6 @@ class PlayerPairCreator
     private function createPairs(array $players): array
     {
         $pairs = [];
-        $addedPlayers = [];
         $count = count($players);
 
         if ($count < 4) {

@@ -30,6 +30,13 @@ class ExactRankingDiffStrategy implements StrategyInterface
                 $teamA = $pairs[$i];
                 $teamB = $pairs[$j];
 
+                $idsA = array_map(fn($p) => $p->getId(), $teamA->getPlayers());
+                $idsB = array_map(fn($p) => $p->getId(), $teamB->getPlayers());
+
+                if (count(array_intersect($idsA, $idsB)) != 0) {
+                    continue;
+                }
+
                 $diff = max($teamA->getRanking(), $teamB->getRanking()) / min($teamA->getRanking(), $teamB->getRanking());
 
                 $exactDiff = ($this->exactPercentageDiff+100) / 100;
@@ -38,7 +45,7 @@ class ExactRankingDiffStrategy implements StrategyInterface
                         'teamA' => $teamA->getPlayers(),
                         'teamB' => $teamB->getPlayers(),
                         'rankingSumA' => $teamA->getRanking(),
-                        'rankingSumB' => $teamB->getRanking()
+                        'rankingSumB' => $teamB->getRanking(),
                     ]);
                 }
             }
