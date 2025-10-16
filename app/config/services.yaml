@@ -33,6 +33,7 @@ services:
         arguments:
             $strategy:
                 '@App\Service\TournamentCreator\Strategy\MaxRankingDiffStrategy'
+                # '@App\Service\TournamentCreator\Strategy\ExactRankingDiffStrategy'
 
     App\Service\TournamentCreator\Strategy\ExactRankingDiffStrategy:
         arguments:
