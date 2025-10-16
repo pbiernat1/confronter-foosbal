@@ -42,6 +42,10 @@ class TournamentPair
 
     public function getDifference(): int
     {
-        return $this->getRankingA() - $this->getRankingB();
+        if ($this->getRankingA() >= $this->getRankingB()) {
+            return $this->getRankingA() - $this->getRankingB();
+        }
+
+        return $this->getRankingB() - $this->getRankingA();
     }
 }

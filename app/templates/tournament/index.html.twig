@@ -21,6 +21,7 @@
                 <td>{{ player.firstName }}</td>
                 <td>{{ player.lastName }}</td>
                 <td>{{ player.ranking }}</td>
+            </tr>
         {% endfor %}
         </tbody>
     </table>
@@ -44,6 +45,9 @@
                 <td>{{ player.lastName }}</td>
                 <td>{{ player.ranking }}</td>
         {% endfor %}
+        <tr>
+            <td colspan="4">Difference between teams {{ tournamentPairs.getDifference() }}</td>
+        </tr>
         </tbody>
     </table>
 
