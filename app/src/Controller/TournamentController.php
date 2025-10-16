@@ -38,7 +38,6 @@ class TournamentController extends AbstractController
             );
         }
 
-        // dump($tournamentPairs);exit;
         return $this->render('tournament/index.html.twig', [
             'tournamentPairs' => $tournamentPairs,
         ]);
