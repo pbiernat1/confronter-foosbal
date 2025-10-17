@@ -26,7 +26,7 @@ class PlayerPairCreatorTest extends AppTestCase
     public function testCreatedFourPairsPlayerPairGenerator(): void
     {
         $this->loadFixture(new TestCreatedFourPairsPlayerPairGeneratorFixtures());
-        $players = $this->em->getRepository(Player::class)->findAllPlayers();
+        $players = $this->manager->getRepository(Player::class)->findAllPlayers();
 
         $playerPairCreator = new PlayerPairCreator();
         $playerPairCreator->generate($players);
@@ -41,7 +41,7 @@ class PlayerPairCreatorTest extends AppTestCase
     public function testGetNotExistingPlayerPair(): void
     {
         $this->loadFixture(new TestGetNotExistingPlayerPairFixtures());
-        $players = $this->em->getRepository(Player::class)->findAllPlayers();
+        $players = $this->manager->getRepository(Player::class)->findAllPlayers();
 
         $playerPairCreator = new PlayerPairCreator();
         $playerPairCreator->generate($players);

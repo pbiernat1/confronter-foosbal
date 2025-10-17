@@ -9,6 +9,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class AppWebTestCase extends WebTestCase
 {
+    use Fixtures;
+    
     protected static KernelBrowser $client;
 
     protected EntityManagerInterface $manager;
