@@ -16,7 +16,7 @@ class PlayerFilterTest extends AppTestCase
     public function testSuccessFilterWithActiveStrategy()
     {
         $this->loadFixture(new TestSuccessFilterWithActiveStrategyFixtures());
-        $players = $this->em->getRepository(Player::class)->findAllPlayers();
+        $players = $this->manager->getRepository(Player::class)->findAllPlayers();
 
         $filter = new PlayerFilter(new PlayerFilterActiveStrategy());
         $filteredPlayers = $filter->filter($players);
@@ -27,7 +27,7 @@ class PlayerFilterTest extends AppTestCase
     public function testSuccessFilterWithInactiveStrategy()
     {
         $this->loadFixture(new TestSuccessFilterWithInactiveStrategyFixtures());
-        $players = $this->em->getRepository(Player::class)->findAllPlayers();
+        $players = $this->manager->getRepository(Player::class)->findAllPlayers();
 
         $filter = new PlayerFilter(new PlayerFilterInactiveStrategy());
         $filteredPlayers = $filter->filter($players);

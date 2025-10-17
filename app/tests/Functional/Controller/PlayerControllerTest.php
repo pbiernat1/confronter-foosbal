@@ -55,10 +55,11 @@ final class PlayerControllerTest extends AppWebTestCase
         $this->manager->persist($fixture);
         $this->manager->flush();
 
-        self::$client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
+        $crawler = self::$client->request('GET', sprintf('%s%s', $this->path, $fixture->getId()));
 
         self::assertResponseStatusCodeSame(Response::HTTP_OK);
         self::assertPageTitleContains('Foosball match generator');
+        self::assertSame('Player details', $crawler->filter('h1')->first()->text());
     }
 
     public function testEdit(): void
